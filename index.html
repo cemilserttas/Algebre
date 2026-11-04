@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheatsheets ICHEC — Algèbre & Statistiques</title>
+    <style>
+        :root {
+            --primary-alg: #1e3a8a;
+            --primary-stat: #0f766e;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --card-border: #e2e8f0;
+            --card-shadow: 0 10px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.04);
+            --radius-lg: 16px;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0b1120;
+            --card-bg: #151e32;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --card-border: #23314e;
+            --card-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0f766e 100%);
+            color: #ffffff;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.6rem;
+        }
+
+        p.subtitle {
+            font-size: 1.15rem;
+            color: #e0f2fe;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .theme-toggle-btn {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #fff;
+            padding: 0.5rem 0.9rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: -2rem auto 3rem;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .portal-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 2.2rem;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portal-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+        }
+
+        .portal-card.algebre::before {
+            background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+        }
+
+        .portal-card.stat::before {
+            background: linear-gradient(90deg, #0f766e, #14b8a6);
+        }
+
+        .portal-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.12);
+        }
+
+        .card-icon {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+        }
+
+        .portal-card.algebre .card-title {
+            color: var(--primary-alg);
+        }
+
+        .portal-card.stat .card-title {
+            color: var(--primary-stat);
+        }
+
+        .card-prof {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 1.2rem;
+            font-weight: 600;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            font-size: 0.92rem;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .feature-list li span.bullet {
+            font-weight: bold;
+        }
+
+        .portal-card.algebre span.bullet { color: var(--primary-alg); }
+        .portal-card.stat span.bullet { color: var(--primary-stat); }
+
+        .btn-launch {
+            display: block;
+            text-align: center;
+            padding: 0.9rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 700;
+            text-decoration: none;
+            color: #fff;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .portal-card.algebre .btn-launch {
+            background: #1e3a8a;
+        }
+        .portal-card.algebre .btn-launch:hover {
+            background: #1e40af;
+            box-shadow: 0 6px 15px rgba(30, 58, 138, 0.35);
+        }
+
+        .portal-card.stat .btn-launch {
+            background: #0f766e;
+        }
+        .portal-card.stat .btn-launch:hover {
+            background: #115e59;
+            box-shadow: 0 6px 15px rgba(15, 118, 110, 0.35);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--card-border);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">🌓 Mode Sombre</button>
+        <div class="header-badge">ICHEC Brussels Management School</div>
+        <h1>Portail Cheatsheets : Math, Stat & Algèbre</h1>
+        <p class="subtitle">Vos fiches de référence interactives pour réussir 100% des exercices et examens du bloc Business Analyst.</p>
+    </header>
+
+    <main>
+        <!-- Card 1 : Algèbre -->
+        <div class="portal-card algebre">
+            <div>
+                <div class="card-icon">📐</div>
+                <h2 class="card-title">Algèbre Linéaire & Calcul Matriciel</h2>
+                <div class="card-prof">Réf. Professeur M. Bui • 10 Modules Complets</div>
+                <ul class="feature-list">
+                    <li><span class="bullet">✓</span> Modèle de Leontief & Équilibre Économique</li>
+                    <li><span class="bullet">✓</span> Calcul Matriciel, Ordres, Trace & Transposée</li>
+                    <li><span class="bullet">✓</span> Échelonnement de Gauss & Calcul du Rang</li>
+                    <li><span class="bullet">✓</span> Déterminants, Sarrus, Mineurs & Cofacteurs</li>
+                    <li><span class="bullet">✓</span> Inversion par la Matrice Adjointe en 4 étapes</li>
+                    <li><span class="bullet">✓</span> Systèmes Linéaires $AX=B$ & Rouché-Capelli</li>
+                    <li><span class="bullet">✓</span> Familles Libres, Génératrices & Bases de $\mathbb{R}^n$</li>
+                    <li><span class="bullet">✓</span> Applications Linéaires & Matrices de Passage</li>
+                    <li><span class="bullet">✓</span> Diagonalisation, Valeurs Propres & Puissance $A^n$</li>
+                    <li><span class="bullet">✓</span> Modèles de Rédaction & Simulateur $2 \times 2$</li>
+                </ul>
+            </div>
+            <a href="Cheatsheet_Algebre_Lineaire.html" class="btn-launch">Ouvrir la Cheatsheet Algèbre ➔</a>
+        </div>
+
+        <!-- Card 2 : Statistiques -->
+        <div class="portal-card stat">
+            <div>
+                <div class="card-icon">📊</div>
+                <h2 class="card-title">Statistiques & Probabilités</h2>
+                <div class="card-prof">Réf. Professeur Dr Sarah Dendievel • 12 Modules Complets</div>
+                <ul class="feature-list">
+                    <li><span class="bullet">✓</span> Typologie des Variables & Tableaux Fréquences</li>
+                    <li><span class="bullet">✓</span> Mesures de Position & Diagnostic d'Asymétrie</li>
+                    <li><span class="bullet">✓</span> Boîte à Moustaches, Tukey & Formule de Koenig</li>
+                    <li><span class="bullet">✓</span> Données en Classes, Densités & Ogive Cumulative</li>
+                    <li><span class="bullet">✓</span> Logique Propositionnelle & Tables de Vérité</li>
+                    <li><span class="bullet">✓</span> Démarche Fréquentielle vs Classique & Bayes</li>
+                    <li><span class="bullet">✓</span> Variables Aléatoires & Distribution Binomiale</li>
+                    <li><span class="bullet">✓</span> Loi Normale $N(\mu,\sigma^2)$ & Guide 6 Cas de Table</li>
+                    <li><span class="bullet">✓</span> Théorème Central Limite (TCL) & Échantillonnage</li>
+                    <li><span class="bullet">✓</span> Intervalles de Confiance (Moyenne & Proportion)</li>
+                    <li><span class="bullet">✓</span> Tests d'Hypothèses en 5 Étapes & Risques $\alpha, \beta$</li>
+                    <li><span class="bullet">✓</span> Modèles de Rédaction & Simulateur Table Normale</li>
+                </ul>
+            </div>
+            <a href="Cheatsheet_Statistiques_et_Probabilites.html" class="btn-launch">Ouvrir la Cheatsheet Statistique ➔</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>Créé pour le programme Business Analyst • ICHEC Brussels Management School • Hébergé sur GitHub Pages</p>
+    </footer>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            document.getElementById('themeBtn').innerHTML = newTheme === 'dark' ? '☀️ Mode Clair' : '🌓 Mode Sombre';
+            localStorage.setItem('portal_theme', newTheme);
+        }
+
+        (function() {
+            const saved = localStorage.getItem('portal_theme');
+            if (saved) {
+                document.body.setAttribute('data-theme', saved);
+                if (saved === 'dark') document.getElementById('themeBtn').innerHTML = '☀️ Mode Clair';
+            }
+        })();
+    </script>
+</body>
+</html>

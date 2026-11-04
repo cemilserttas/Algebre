@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheatsheet Ultime : Algèbre Linéaire & Calcul Matriciel — ICHEC</title>
+    <!-- MathJax 3 Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --primary-bg: #eff6ff;
+            --secondary: #0f766e;
+            --secondary-light: #14b8a6;
+            --secondary-bg: #f0fdfa;
+            --accent: #b45309;
+            --accent-bg: #fef3c7;
+            --danger: #b91c1c;
+            --danger-bg: #fef2f2;
+            --success: #15803d;
+            --success-bg: #f0fdf4;
+            --purple: #6b21a8;
+            --purple-bg: #faf5ff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --radius-lg: 14px;
+            --radius-md: 8px;
+            --radius-sm: 6px;
+        }
+
+        [data-theme="dark"] {
+            --primary: #60a5fa;
+            --primary-light: #93c5fd;
+            --primary-bg: #1e293b;
+            --secondary: #2dd4bf;
+            --secondary-light: #5eead4;
+            --secondary-bg: #132e2d;
+            --accent: #fbbf24;
+            --accent-bg: #2d2613;
+            --danger: #f87171;
+            --danger-bg: #311818;
+            --success: #4ade80;
+            --success-bg: #132e1a;
+            --purple: #c084fc;
+            --purple-bg: #2a163d;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --bg-body: #0b1120;
+            --card-bg: #151e32;
+            --card-border: #23314e;
+            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Header Bar */
+        header.top-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            color: #ffffff;
+            padding: 1.8rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-content {
+            max-width: 1500px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-title-box h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .header-title-box p {
+            font-size: 0.9rem;
+            color: #93c5fd;
+            margin-top: 0.2rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding: 0.6rem 1rem 0.6rem 2.2rem;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            width: 260px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input::placeholder {
+            color: #cbd5e1;
+        }
+
+        .search-box input:focus {
+            background: rgba(255, 255, 255, 0.25);
+            width: 320px;
+            border-color: #60a5fa;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #cbd5e1;
+            font-size: 0.9rem;
+        }
+
+        .btn-theme {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #fff;
+            padding: 0.5rem 0.9rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-theme:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Filter Pills */
+        .filter-nav {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--card-border);
+            padding: 0.75rem 2rem;
+            position: sticky;
+            top: 86px;
+            z-index: 900;
+            overflow-x: auto;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        }
+
+        .filter-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .filter-btn {
+            background: var(--bg-body);
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        /* Main Container */
+        .main-layout {
+            max-width: 1500px;
+            margin: 1.5rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 1.8rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+        }
+
+        /* Sticky Sidebar TOC */
+        .sidebar {
+            position: sticky;
+            top: 150px;
+            height: calc(100vh - 170px);
+            overflow-y: auto;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 1.2rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .sidebar h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 0.4rem;
+        }
+
+        .sidebar a {
+            display: block;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 0.35rem 0.6rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+            border-left: 2px solid transparent;
+        }
+
+        .sidebar a:hover {
+            background: var(--primary-bg);
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        /* Content Area */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Module Header Section */
+        .section-header {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem 1.8rem;
+            box-shadow: var(--card-shadow);
+            border-left: 6px solid var(--primary);
+        }
+
+        .section-header h2 {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 0.3rem;
+        }
+
+        /* Grid of Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 1.4rem;
+        }
+
+        .cards-grid.full-width {
+            grid-template-columns: 1fr;
+        }
+
+        /* Cheat Card */
+        .cheat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 1.4rem;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: relative;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .cheat-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 0.8rem;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 0.6rem;
+        }
+
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* Badges */
+        .badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.25rem 0.55rem;
+            border-radius: 12px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .badge-theorem { background: var(--purple-bg); color: var(--purple); border: 1px solid var(--purple); }
+        .badge-method { background: var(--primary-bg); color: var(--primary); border: 1px solid var(--primary); }
+        .badge-trap { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger); }
+        .badge-tip { background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent); }
+        .badge-exam { background: var(--secondary-bg); color: var(--secondary); border: 1px solid var(--secondary); }
+
+        /* Formula Box */
+        .formula-box {
+            background: var(--primary-bg);
+            border: 1px solid #bfdbfe;
+            border-left: 4px solid var(--primary);
+            border-radius: var(--radius-md);
+            padding: 0.9rem 1.1rem;
+            font-size: 0.95rem;
+            overflow-x: auto;
+        }
+
+        [data-theme="dark"] .formula-box {
+            border-color: #1e3a8a;
+        }
+
+        /* Step Box */
+        .step-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+            font-size: 0.9rem;
+        }
+
+        .step-num {
+            background: var(--primary);
+            color: #fff;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        /* Callout Alerts */
+        .callout {
+            border-radius: var(--radius-md);
+            padding: 0.85rem 1rem;
+            font-size: 0.88rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .callout-trap {
+            background: var(--danger-bg);
+            border-left: 4px solid var(--danger);
+            color: var(--text-main);
+        }
+
+        .callout-exam {
+            background: var(--secondary-bg);
+            border-left: 4px solid var(--secondary);
+            color: var(--text-main);
+        }
+
+        .callout-tip {
+            background: var(--accent-bg);
+            border-left: 4px solid var(--accent);
+            color: var(--text-main);
+        }
+
+        .callout-header {
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* Redaction Script Quote */
+        .redaction-quote {
+            background: var(--bg-body);
+            border: 1px dashed var(--secondary);
+            border-radius: var(--radius-md);
+            padding: 0.8rem 1rem;
+            font-style: normal;
+            font-size: 0.88rem;
+            position: relative;
+        }
+
+        .redaction-quote::before {
+            content: "✍️ Modèle de rédaction copie :";
+            display: block;
+            font-weight: 700;
+            color: var(--secondary);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.4rem;
+        }
+
+        /* Interactive Widgets */
+        .interactive-widget {
+            background: var(--card-bg);
+            border: 2px solid var(--secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .matrix-input-grid {
+            display: inline-grid;
+            gap: 6px;
+            padding: 8px 12px;
+            background: var(--bg-body);
+            border-radius: var(--radius-md);
+            border-left: 3px solid var(--text-main);
+            border-right: 3px solid var(--text-main);
+            margin: 0.5rem 0;
+        }
+
+        .matrix-input-grid input {
+            width: 48px;
+            height: 36px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-sm);
+            background: var(--card-bg);
+            color: var(--text-main);
+        }
+
+        .btn-calc {
+            background: var(--secondary);
+            color: #fff;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .btn-calc:hover {
+            background: #0d5f57;
+        }
+
+        .calc-result {
+            margin-top: 1rem;
+            padding: 0.9rem;
+            background: var(--secondary-bg);
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            border: 1px solid var(--secondary-light);
+        }
+
+        /* Copy Button */
+        .btn-copy {
+            background: transparent;
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 0.25rem 0.6rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            cursor: pointer;
+            align-self: flex-start;
+            transition: all 0.2s;
+        }
+
+        .btn-copy:hover {
+            background: var(--primary-bg);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* Tables */
+        table.cheat-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            margin: 0.5rem 0;
+        }
+
+        table.cheat-table th, table.cheat-table td {
+            border: 1px solid var(--card-border);
+            padding: 0.6rem 0.8rem;
+            text-align: left;
+        }
+
+        table.cheat-table th {
+            background: var(--primary-bg);
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* Print styles */
+        @media print {
+            header.top-header, .filter-nav, .sidebar, .interactive-widget, .btn-copy, .btn-theme {
+                display: none !important;
+            }
+            .main-layout {
+                display: block;
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            .cheat-card {
+                page-break-inside: avoid;
+                border: 1px solid #ccc;
+                box-shadow: none;
+                margin-bottom: 1rem;
+            }
+            body {
+                background: #fff;
+                color: #000;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="top-header">
+        <div class="header-content">
+            <div class="header-title-box">
+                <h1>📐 CHEATSHEET MAÎTRE : ALGÈBRE LINÉAIRE & MATRICES</h1>
+                <p>ICHEC Brussels Management School • Mathématiques pour Business Analysts • Réf. Prof. M. Bui</p>
+            </div>
+            <div class="header-actions">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="liveSearch" placeholder="Rechercher (ex: Gauss, valeur propre, adjointe)...">
+                </div>
+                <button class="btn-theme" id="themeToggle" onclick="toggleTheme()">🌓 Mode Sombre</button>
+                <a href="Cheatsheet_Statistiques_et_Probabilites.html" class="btn-theme" style="text-decoration:none;">📊 Aller à la Cheatsheet Statistique ➔</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Quick Navigation Filter Pills -->
+    <nav class="filter-nav">
+        <div class="filter-container">
+            <span style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); margin-right: 0.5rem;">FILTRES RAPIDES :</span>
+            <a href="#sec-leontief" class="filter-btn">🏬 0. Leontief & Data</a>
+            <a href="#sec-matrices" class="filter-btn">🔢 1. Calcul Matriciel</a>
+            <a href="#sec-rang-gauss" class="filter-btn">🪜 2. Rang & Gauss</a>
+            <a href="#sec-determinants" class="filter-btn">🎯 3. Déterminants & Laplace</a>
+            <a href="#sec-inversion" class="filter-btn">🔄 4. Inverse & Adjointe</a>
+            <a href="#sec-systemes" class="filter-btn">⚖️ 5. Systèmes $AX=B$</a>
+            <a href="#sec-espaces" class="filter-btn">🏹 6. Espaces Vectoriels & Bases</a>
+            <a href="#sec-app-lin" class="filter-btn">⚙️ 7. Applications Linéaires & Passage</a>
+            <a href="#sec-diag" class="filter-btn">🔮 8. Diagonalisation & $A^n$</a>
+            <a href="#sec-redaction" class="filter-btn">✍️ 9. Modèles de Rédaction</a>
+            <a href="#sec-outils" class="filter-btn" style="background:var(--secondary); color:#fff;">🧮 Simulateur Express</a>
+        </div>
+    </nav>
+
+    <div class="main-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <h3>Sommaire Rapide</h3>
+            <ul>
+                <li><a href="#sec-leontief">0. Modèle de Leontief & Économie</a></li>
+                <li><a href="#sec-matrices">1. Opérations, Ordres, Trace & Transposée</a></li>
+                <li><a href="#sec-rang-gauss">2. Échelonnement de Gauss & Rang</a></li>
+                <li><a href="#sec-determinants">3. Déterminants, Mineurs & Cofacteurs</a></li>
+                <li><a href="#sec-inversion">4. Inversion : Matrice Adjointe</a></li>
+                <li><a href="#sec-systemes">5. Résolution de Systèmes $AX=B$</a></li>
+                <li><a href="#sec-espaces">6. Familles Libres, Génératrices & Bases</a></li>
+                <li><a href="#sec-app-lin">7. Applications Linéaires & Matrices de Passage</a></li>
+                <li><a href="#sec-diag">8. Diagonalisation, Valeurs Propres & $A^n$</a></li>
+                <li><a href="#sec-redaction">9. Modèles de Rédaction Officiels ICHEC</a></li>
+                <li><a href="#sec-outils">🧮 Boîte à Outils Interactive</a></li>
+            </ul>
+            <div style="margin-top: 1.5rem; padding: 0.8rem; background: var(--primary-bg); border-radius: var(--radius-md); font-size: 0.8rem;">
+                <strong>💡 Astuce Révision :</strong> À l'examen ICHEC, chaque étape de calcul matriciel doit être explicitée avec la formule générale avant les chiffres.
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content-area">
+
+            <!-- SECTION 0 : MODÈLE DE LEONTIEF -->
+            <section id="sec-leontief" class="cheat-section">
+                <div class="section-header">
+                    <h2>🏬 0. Modèle d'Entrée-Sortie de Leontief & Données Business</h2>
+                    <p>La vision globale du cours : traduire des flux industriels et des données clients en équations matricielles.</p>
+                </div>
+                <div class="cards-grid">
+                    <!-- Card 1 -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Équation Fondamentale d'Équilibre</span>
+                            <span class="badge badge-theorem">Formule Clé</span>
+                        </div>
+                        <div class="formula-box">
+                            $$\mathbf{p} = M\mathbf{p} + \mathbf{d} \iff (I - M)\mathbf{p} = \mathbf{d} \iff \mathbf{p} = (I - M)^{-1}\mathbf{d}$$
+                        </div>
+                        <ul class="step-list">
+                            <li class="step-item"><span class="step-num">1</span><div class="step-content">$\mathbf{p} \in \mathbb{R}^n$ : Vecteur de <strong>production totale</strong> (brute) de chaque secteur.</div></li>
+                            <li class="step-item"><span class="step-num">2</span><div class="step-content">$M = (m_{ij}) \in \mathcal{M}_n$ : Matrice des <strong>coefficients techniques</strong> ($m_{ij} = \frac{\text{flux de } i \text{ vers } j}{p_j}$).</div></li>
+                            <li class="step-item"><span class="step-num">3</span><div class="step-content">$M\mathbf{p}$ : Consommation <strong>intermédiaire</strong> interne requise par l'appareil productif.</div></li>
+                            <li class="step-item"><span class="step-num">4</span><div class="step-content">$\mathbf{d} \in \mathbb{R}^n$ : Vecteur de la <strong>demande finale</strong> extérieure des ménages/exportations.</div></li>
+                            <li class="step-item"><span class="step-num">5</span><div class="step-content">$(I - M)^{-1}$ : <strong>Multiplicateur de Leontief</strong> (capture tous les effets d'entraînement directs et indirects).</div></li>
+                        </ul>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Tableaux de Données en Business Analytics</span>
+                            <span class="badge badge-tip">Convention ICHEC</span>
+                        </div>
+                        <p style="font-size:0.9rem;">Structure standard de la matrice d'observations :</p>
+                        <div class="formula-box">
+                            $$X \in \mathcal{M}_{p, n}(\mathbb{R}) : \quad \begin{cases} p \text{ lignes} & = \text{variables / caractéristiques} \\ n \text{ colonnes} & = \text{individus / clients / observations} \end{cases}$$
+                        </div>
+                        <div class="callout callout-tip">
+                            <div class="callout-header">💡 Règle de notation du cours :</div>
+                            Les vecteurs sont toujours écrits <strong>en colonne</strong> et notés en <strong>gras</strong> ($\mathbf{x}, \mathbf{u}, \mathbf{v}$). Les scalaires sont notés en minuscules ordinaires ($\lambda, \alpha \in \mathbb{R}$).
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 1 : CALCUL MATRICIEL -->
+            <section id="sec-matrices" class="cheat-section">
+                <div class="section-header">
+                    <h2>🔢 1. Calcul Matriciel Fondamental : Opérations, Ordres & Propriétés</h2>
+                    <p>Règles arithmétiques, compatibilités d'ordres, trace, transposée et commutativité.</p>
+                </div>
+                <div class="cards-grid">
+                    <!-- Card 1 : Ordres et Produit -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Compatibilité des Ordres & Produit Matriciel</span>
+                            <span class="badge badge-method">Algorithme</span>
+                        </div>
+                        <div class="formula-box">
+                            $$A_{(m \times p)} \cdot B_{(p \times n)} = C_{(m \times n)}$$
+                            $$c_{ij} = \operatorname{Ligne}_i(A) \cdot \operatorname{Col}_j(B) = \sum_{k=1}^p a_{ik} b_{kj}$$
+                        </div>
+                        <div class="callout callout-trap">
+                            <div class="callout-header">⚠️ PIÈGE CLASSIQUE D'EXAMEN :</div>
+                            Le produit $A \cdot B$ n'est possible <strong>que si le nombre de colonnes de $A$ est égal au nombre de lignes de $B$</strong> ($p = p$). Si ce n'est pas le cas, notez : <em>« Produit non défini / impossible car le nombre de colonnes de la première matrice ($p$) $\neq$ nombre de lignes de la seconde ($q$). »</em>
+                        </div>
+                        <div class="callout callout-exam">
+                            <div class="callout-header">⚡ Astuce Calcul d'un Élément Isolé $c_{ij}$ :</div>
+                            Pour trouver un seul coefficient (ex: $n_{2,3}$ de $B \cdot A$), ne calculez jamais toute la matrice ! Multipliez directement la <strong>Ligne 2</strong> de la 1ère matrice par la <strong>Colonne 3</strong> de la 2nde matrice.
+                        </div>
+                    </div>
+
+                    <!-- Card 2 : Propriétés Transposée & Trace -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Transposée ($A^t$ ou $A^\top$) et Trace ($\operatorname{tr}(A)$)</span>
+                            <span class="badge badge-theorem">Propriétés</span>
+                        </div>
+                        <div class="formula-box">
+                            $$\operatorname{tr}(A) = \sum_{i=1}^n a_{ii} = a_{11} + a_{22} + \dots + a_{nn} \quad (\text{matrices carrées } n \times n \text{ uniquement})$$
+                        </div>
+                        <table class="cheat-table">
+                            <thead>
+                                <tr><th>Propriétés de la Transposée</th><th>Propriétés de la Trace</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>$(A^t)^t = A$</td><td>$\operatorname{tr}(A + B) = \operatorname{tr}(A) + \operatorname{tr}(B)$</td></tr>
+                                <tr><td>$(A + B)^t = A^t + B^t$</td><td>$\operatorname{tr}(\lambda A) = \lambda \operatorname{tr}(A)$</td></tr>
+                                <tr><td><strong style="color:var(--danger);">$(AB)^t = B^t A^t$</strong> (inversion d'ordre !)</td><td>$\operatorname{tr}(AB) = \operatorname{tr}(BA)$ (cyclicité)</td></tr>
+                                <tr><td>$(A^{-1})^t = (A^t)^{-1}$</td><td>$\operatorname{tr}(A^t) = \operatorname{tr}(A)$</td></tr>
+                                <tr><td>$\det(A^t) = \det(A)$</td><td>$\operatorname{tr}(A) = \sum_{i=1}^n \lambda_i$ (somme des valeurs propres)</td></tr>
+                            </tbody>
+                        </table>
+                        <div class="callout callout-trap">
+                            <div class="callout-header">⚠️ ATTENTION : NON-COMMUTATIVITÉ</div>
+                            En règle générale, <strong>$A \cdot B \neq B \cdot A$</strong>. Même quand $AB$ et $BA$ existent et ont le même ordre, ils sont généralement distincts.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2 : RANG & GAUSS -->
+            <section id="sec-rang-gauss" class="cheat-section">
+                <div class="section-header">
+                    <h2>🪜 2. Rang & Échelonnement de Gauss</h2>
+                    <p>Déterminer la dimension effective, le nombre d'équations indépendantes et simplifier les matrices.</p>
+                </div>
+                <div class="cards-grid">
+                    <!-- Card 1 : Opérations Élémentaires -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Les 3 Opérations Élémentaires Autorisées</span>
+                            <span class="badge badge-method">Règles Strictes</span>
+                        </div>
+                        <ul class="step-list">
+                            <li class="step-item"><span class="step-num">1</span><div class="step-content"><strong>Échange de deux lignes :</strong> $L_i \leftrightarrow L_j$ (Permutation d'équations).</div></li>
+                            <li class="step-item"><span class="step-num">2</span><div class="step-content"><strong>Multiplication par un scalaire non nul :</strong> $L_i \leftarrow c \cdot L_i$ avec $c \neq 0$.</div></li>
+                            <li class="step-item"><span class="step-num">3</span><div class="step-content"><strong>Combinaison linéaire :</strong> $L_i \leftarrow L_i + c \cdot L_j$ avec $j \neq i$ (Élimination sous le pivot).</div></li>
+                        </ul>
+                        <div class="callout callout-trap">
+                            <div class="callout-header">⛔ FAUTE GRAVE D'EXAMEN :</div>
+                            Ne jamais remplacer $L_i$ par $c L_i + L_j$ sans expliciter l'opération, et surtout ne jamais multiplier une ligne par $0$ ($L_i \leftarrow 0 \cdot L_i$ détruit l'information) ! Toujours noter clairement la flèche à côté de la ligne : ex. $L_2 \leftarrow L_2 - 2L_1$.
+                        </div>
+                    </div>
+
+                    <!-- Card 2 : Rang -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Définition & Propriétés du Rang $\operatorname{rg}(A)$</span>
+                            <span class="badge badge-theorem">Théorème</span>
+                        </div>
+                        <div class="formula-box">
+                            $$\mathbf{\operatorname{rg}(A) = \text{Nombre de lignes non nulles (ou nombre de pivots) de la forme échelonnée de } A}$$
+                        </div>
+                        <ul class="step-list">
+                            <li class="step-item"><span class="step-num">•</span><div class="step-content">$\operatorname{rg}(A) \le \min(m, n)$ pour toute matrice $A$ de dimensions $m \times n$.</div></li>
+                            <li class="step-item"><span class="step-num">•</span><div class="step-content">$\operatorname{rg}(A^t) = \operatorname{rg}(A)$ (le rang des lignes = rang des colonnes).</div></li>
+                            <li class="step-item"><span class="step-num">•</span><div class="step-content">Pour une matrice carrée $n \times n$ : $A$ est inversible $\iff \operatorname{rg}(A) = n \iff \det(A) \neq 0$.</div></li>
+                        </ul>
+                        <div class="redaction-quote">
+                            « Après application des opérations élémentaires sur les lignes $L_2 \leftarrow L_2 - 2L_1$ et $L_3 \leftarrow L_3 - 3L_2$, on obtient une matrice triangulaire échelonnée comportant $r = 2$ lignes non nulles avec des pivots non nuls. Par conséquent, $\operatorname{rg}(A) = 2$. »
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3 : DÉTERMINANTS -->
+            <section id="sec-determinants" class="cheat-section">
+                <div class="section-header">
+                    <h2>🎯 3. Déterminants, Mineurs, Cofacteurs & Formule de Laplace</h2>
+                    <p>Calculs $2 \times 2$, règle de Sarrus pour $3 \times 3$, mineurs $M_{ij}$, cofacteurs $C_{ij}$ et propriétés fondamentales.</p>
+                </div>
+                <div class="cards-grid">
+                    <!-- Card 1 : 2x2 et 3x3 Sarrus -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Déterminants $2 \times 2$ et $3 \times 3$</span>
+                            <span class="badge badge-method">Calcul Direct</span>
+                        </div>
+                        <div class="formula-box">
+                            $$\begin{vmatrix} a & b \\ c & d \end{vmatrix} = ad - bc$$
+                        </div>
+                        <p style="font-size:0.9rem;">Pour $3 \times 3$ : Règle de Sarrus (uniquement valable pour $3 \times 3$ !) :</p>
+                        <div class="formula-box" style="font-size:0.85rem;">
+                            $$\begin{vmatrix} a & b & c \\ d & e & f \\ g & h & i \end{vmatrix} = (aei + bfg + cdh) - (ceg + afh + bdi)$$
+                        </div>
+                        <div class="callout callout-trap">
+                            <div class="callout-header">⚠️ INTERDICTION FORMELLE :</div>
+                            La règle de Sarrus <strong>ne s'applique JAMAIS pour les matrices d'ordre 4 ou plus</strong>. Pour $n \ge 4$, il faut obligatoirement utiliser le développement de Laplace ou l'échelonnement triangulaire !
+                        </div>
+                    </div>
+
+                    <!-- Card 2 : Mineurs et Cofacteurs -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Mineurs, Cofacteurs & Développement de Laplace</span>
+                            <span class="badge badge-theorem">Formules Officielles</span>
+                        </div>
+                        <div class="formula-box">
+                            $$M_{ij} = \det(\text{sous-matrice sans la ligne } i \text{ ni la colonne } j)$$
+                            $$\mathbf{C_{ij} = (-1)^{i+j} \cdot M_{ij}}$$
+                        </div>
+                        <p style="font-size:0.85rem;"><strong>Échiquier des signes $(-1)^{i+j}$ :</strong></p>
+                        <div style="font-family: monospace; font-size:1.1rem; text-align:center; background:var(--bg-body); padding:0.4rem; border-radius:var(--radius-sm); margin:0.3rem 0;">
+                            + &nbsp; - &nbsp; +<br>
+                            - &nbsp; + &nbsp; -<br>
+                            + &nbsp; - &nbsp; +
+                        </div>
+                        <p style="font-size:0.85rem;"><strong>Développement de Laplace (selon la ligne $i$ ou colonne $j$) :</strong></p>
+                        <div class="formula-box">
+                            $$\det(A) = \sum_{j=1}^n a_{ij} C_{ij} \quad (\text{ligne } i) \quad = \sum_{i=1}^n a_{ij} C_{ij} \quad (\text{colonne } j)$$
+                        </div>
+                        <div class="callout callout-tip">
+                            <div class="callout-header">💡 Astuce Rapidité :</div>
+                            Développez toujours selon la ligne ou la colonne contenant <strong>le maximum de zéros</strong> pour éliminer immédiatement les calculs de sous-déterminants !
+                        </div>
+                    </div>
+
+                    <!-- Card 3 : Les 7 Propriétés d'Or des Déterminants -->
+                    <div class="cheat-card" style="grid-column: 1 / -1;">
+                        <div class="card-header">
+                            <span class="card-title">Les 7 Propriétés Fondamentales des Déterminants (Très Fréquent à l'Examen !)</span>
+                            <span class="badge badge-exam">Indispensable Justification</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                            <div class="callout callout-exam">
+                                <strong>1. Échange de 2 lignes / colonnes :</strong><br>
+                                Si $B$ est obtenue en permutant 2 lignes de $A$ : $\det(B) = -\det(A)$.
+                            </div>
+                            <div class="callout callout-exam">
+                                <strong>2. Multiplication d'une ligne par $\lambda$ :</strong><br>
+                                Si une ligne de $A$ est multipliée par $\lambda$ : le déterminant est multiplié par $\lambda$.
+                            </div>
+                            <div class="callout callout-exam">
+                                <strong>3. Multiplication globale $\det(\lambda A)$ :</strong><br>
+                                Pour $A \in \mathcal{M}_n(\mathbb{R})$ : $\mathbf{\det(\lambda A) = \lambda^n \det(A)}$. <em>(Ex: $\det(2A) = 2^3 \det(A) = 8\det(A)$ pour $3 \times 3$).</em>
+                            </div>
+                            <div class="callout callout-exam">
+                                <strong>4. Produit de matrices :</strong><br>
+                                $\mathbf{\det(A \cdot B) = \det(A) \cdot \det(B)}$.
+                            </div>
+                            <div class="callout callout-exam">
+                                <strong>5. Inverse & Transposée :</strong><br>
+                                $\det(A^{-1}) = \frac{1}{\det(A)}$ et $\det(A^t) = \det(A)$.
+                            </div>
+                            <div class="callout callout-exam">
+                                <strong>6. Lignes proportionnelles ou nulles :</strong><br>
+                                Si $A$ a une ligne de zéros, ou 2 lignes identiques/proportionnelles : $\mathbf{\det(A) = 0}$.
+                            </div>
+                            <div class="callout callout-exam">
+                                <strong>7. Matrice triangulaire ou diagonale :</strong><br>
+                                Le déterminant est le simple <strong>produit des éléments de la diagonale principale</strong> : $\det(A) = a_{11} \cdot a_{22} \cdots a_{nn}$.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4 : INVERSION -->
+            <section id="sec-inversion" class="cheat-section">
+                <div class="section-header">
+                    <h2>🔄 4. Inversion de Matrice : Méthode de la Matrice Adjointe</h2>
+                    <p>La méthode exigée par M. Bui à l'ICHEC pour calculer l'inverse pas à pas.</p>
+                </div>
+                <div class="cards-grid">
+                    <!-- Card 1 : Algorithme Adjointe -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">La Formule de la Matrice Adjointe</span>
+                            <span class="badge badge-theorem">Formule Officielle</span>
+                        </div>
+                        <div class="formula-box">
+                            $$A \text{ est inversible} \iff \det(A) \neq 0$$
+                            $$\mathbf{A^{-1} = \frac{1}{\det(A)} \cdot \operatorname{Adj}(A) = \frac{1}{\det(A)} \cdot (\operatorname{Com}(A))^t}$$
+                        </div>
+                        <ul class="step-list">
+                            <li class="step-item"><span class="step-num">1</span><div class="step-content"><strong>Calculer $\det(A)$ :</strong> S'il vaut 0, s'arrêter : la matrice n'est pas inversible. S'il est $\neq 0$, affirmer qu'elle est inversible.</div></li>
+                            <li class="step-item"><span class="step-num">2</span><div class="step-content"><strong>Calculer la comatrice $\operatorname{Com}(A)$ :</strong> Calculer chacun des $n^2$ cofacteurs $C_{ij} = (-1)^{i+j} M_{ij}$.</div></li>
+                            <li class="step-item"><span class="step-num">3</span><div class="step-content"><strong>Transposer la comatrice pour obtenir l'adjointe :</strong> $\operatorname{Adj}(A) = (\operatorname{Com}(A))^t$.</div></li>
+                            <li class="step-item"><span class="step-num">4</span><div class="step-content"><strong>Diviser par $\det(A)$ :</strong> $A^{-1} = \frac{1}{\det(A)} \operatorname{Adj}(A)$.</div></li>
+                            <li class="step-item"><span class="step-num">5</span><div class="step-content"><strong>Vérification rapide :</strong> Calculer mentalement un coefficient de $A \cdot A^{-1}$ (doit donner 1 sur la diagonale, 0 ailleurs).</div></li>
+                        </ul>
+                        <div class="callout callout-trap">
+                            <div class="callout-header">⚠️ LE PIÈGE FATAL DE L'ADJOINTE :</div>
+                            90% des erreurs d'étudiants viennent de <strong>l'oubli de la transposition</strong> ! $\operatorname{Adj}(A)$ est la <strong>transposée</strong> de la comatrice : $\operatorname{Adj}(A)_{ij} = C_{ji}$.
+                        </div>
+                    </div>
+
+                    <!-- Card 2 : Cas 2x2 Direct -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Formule Éclair pour Matrice $2 \times 2$</span>
+                            <span class="badge badge-tip">Gain de temps</span>
+                        </div>
+                        <div class="formula-box">
+                            $$A = \begin{pmatrix} a & b \\ c & d \end{pmatrix} \implies \mathbf{A^{-1} = \frac{1}{ad - bc} \begin{pmatrix} d & -b \\ -c & a \end{pmatrix}}$$
+                        </div>
+                        <ul class="step-list">
+                            <li class="step-item"><span class="step-num">•</span><div class="step-content">On échange les éléments de la grande diagonale ($a \leftrightarrow d$).</div></li>
+                            <li class="step-item"><span class="step-num">•</span><div class="step-content">On change les signes des éléments hors diagonale ($-b$ et $-c$).</div></li>
+                            <li class="step-item"><span class="step-num">•</span><div class="step-content">On divise par le déterminant $\Delta = ad - bc$.</div></li>
+                        </ul>
+                        <div class="callout callout-exam">
+                            <div class="callout-header">📝 Exemple Résolu :</div>
+                            $A = \begin{pmatrix} 1 & 1 \\ 1 & 2 \end{pmatrix} \implies \det(A) = 2 - 1 = 1$.<br>
+                            $A^{-1} = \frac{1}{1} \begin{pmatrix} 2 & -1 \\ -1 & 1 \end{pmatrix} = \begin{pmatrix} 2 & -1 \\ -1 & 1 \end{pmatrix}$.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 5 : SYSTÈMES LINÉAIRES -->
+            <section id="sec-systemes" class="cheat-section">
+                <div class="section-header">
+                    <h2>⚖️ 5. Résolution de Systèmes Linéaires $AX = B$</h2>
+                    <p>Matrice augmentée, Pivot de Gauss, classification de Rouché-Capelli et substitution arrière.</p>
+                </div>
+                <div class="cards-grid">
+                    <!-- Card 1 : Algorithme de Gauss -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Algorithme Universel du Pivot de Gauss</span>
+                            <span class="badge badge-method">Procédure</span>
+                        </div>
+                        <ul class="step-list">
+                            <li class="step-item"><span class="step-num">1</span><div class="step-content"><strong>Poser la matrice augmentée :</strong> $(A \mid B) = \left(\begin{array}{ccc|c} a_{11} & a_{12} & a_{13} & b_1 \\ a_{21} & a_{22} & a_{23} & b_2 \\ a_{31} & a_{32} & a_{33} & b_3 \end{array}\right)$.</div></li>
+                            <li class="step-item"><span class="step-num">2</span><div class="step-content"><strong>Choisir un pivot non nul :</strong> De préférence égal à $1$ ou $-1$ en position $(1,1)$ (échanger deux lignes si nécessaire).</div></li>
+                            <li class="step-item"><span class="step-num">3</span><div class="step-content"><strong>Éliminer sous le pivot :</strong> $L_2 \leftarrow L_2 - \left(\frac{a_{21}}{a_{11}}\right)L_1$ et $L_3 \leftarrow L_3 - \left(\frac{a_{31}}{a_{11}}\right)L_1$.</div></li>
+                            <li class="step-item"><span class="step-num">4</span><div class="step-content"><strong>Répéter pour la colonne suivante :</strong> Éliminer sous le second pivot $a'_{22}$ pour obtenir une matrice triangulaire échelonnée.</div></li>
+                            <li class="step-item"><span class="step-num">5</span><div class="step-content"><strong>Résoudre par substitution arrière :</strong> On calcule d'abord la dernière inconnue ($z$), puis on remonte pour trouver $y$, puis $x$.</div></li>
+                        </ul>
+                    </div>
+
+                    <!-- Card 2 : Théorème de Rouché-Capelli -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Classification des Solutions (Rouché-Capelli)</span>
+                            <span class="badge badge-theorem">Théorème</span>
+                        </div>
+                        <table class="cheat-table">
+                            <thead>
+                                <tr><th>Condition sur les rangs</th><th>Nature du système</th><th>Ensemble des solutions $\mathcal{S}$</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>$\operatorname{rg}(A) < \operatorname{rg}(A \mid B)$</td>
+                                    <td><strong style="color:var(--danger);">Système Incompatible</strong> (impossible)</td>
+                                    <td>$\mathcal{S} = \emptyset$ (Ligne du type $0x + 0y + 0z = c$ avec $c \neq 0$).</td>
+                                </tr>
+                                <tr>
+                                    <td>$\operatorname{rg}(A) = \operatorname{rg}(A \mid B) = n$</td>
+                                    <td><strong style="color:var(--success);">Système Déterminé</strong></td>
+                                    <td><strong>Solution unique</strong> $\mathcal{S} = \{(x_0, y_0, z_0)\}$.</td>
+                                </tr>
+                                <tr>
+                                    <td>$\operatorname{rg}(A) = \operatorname{rg}(A \mid B) = r < n$</td>
+                                    <td><strong style="color:var(--accent);">Système Indéterminé</strong></td>
+                                    <td><strong>Infinité de solutions</strong> (avec $n - r$ paramètres libres / degrés de liberté).</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="callout callout-exam">
+                            <div class="callout-header">⚡ Règle de Cramer (Système carré $n \times n$ avec $\det(A) \neq 0$) :</div>
+                            Chaque inconnue s'exprime par le ratio :
+                            $$x_i = \frac{\det(A_i)}{\det(A)}$$
+                            où $A_i$ est la matrice $A$ dont la $i$-ème colonne est remplacée par le vecteur second membre $B$.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 6 : ESPACES VECTORIELS -->
+            <section id="sec-espaces" class="cheat-section">
+                <div class="section-header">
+                    <h2>🏹 6. Espaces Vectoriels dans $\mathbb{R}^n$ : Familles Libres, Génératrices & Bases</h2>
+                    <p>Définitions, indépendance linéaire, critères rapides par déterminant et théorèmes de dimension.</p>
+                </div>
+                <div class="cards-grid">
+                    <!-- Card 1 : Définition Libre vs Lié -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Famille Libre vs Famille Liée</span>
+                            <span class="badge badge-method">Démonstration Type</span>
+                        </div>
+                        <p style="font-size:0.9rem;">Une famille $\{u_1, \dots, u_k\}$ est dite <strong>linéairement indépendante (libre)</strong> si :</p>
+                        <div class="formula-box">
+                            $$\lambda_1 u_1 + \lambda_2 u_2 + \dots + \lambda_k u_k = \mathbf{0} \implies \lambda_1 = \lambda_2 = \dots = \lambda_k = 0$$
+                        </div>
+                        <ul class="step-list">
+                            <li class="step-item"><span class="step-num">1</span><div class="step-content">On pose l'équation vectorielle avec des scalaires réels $\lambda_i \in \mathbb{R}$.</div></li>
+                            <li class="step-item"><span class="step-num">2</span><div class="step-content">On traduit cette égalité sous la forme d'un <strong>système linéaire homogène</strong> en $\lambda_i$.</div></li>
+                            <li class="step-item"><span class="step-num">3</span><div class="step-content">Si l'unique solution est la solution nulle ($\lambda_1 = \dots = \lambda_k = 0$) $\implies$ <strong>Famille Libre</strong>.</div></li>
+                            <li class="step-item"><span class="step-num">4</span><div class="step-content">S'il existe au moins une solution non nulle (ex: $\lambda_1 = -2\lambda_2$) $\implies$ <strong>Famille Liée</strong> (l'un des vecteurs est combinaison linéaire des autres).</div></li>
+                        </ul>
+                    </div>
+
+                    <!-- Card 2 : Les 3 Règles d'Or des Cardinaux -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Les 3 Théorèmes Sauveurs d'Examen dans $\mathbb{R}^n$</span>
+                            <span class="badge badge-theorem">Règles Cardinales</span>
+                        </div>
+                        <div style="font-size:0.9rem; line-height:1.5;">
+                            Considérons une famille de $k$ vecteurs dans un espace vectoriel de dimension $n$ (ex: $\mathbb{R}^3$, donc $n=3$) :
+                        </div>
+                        <div class="callout callout-trap">
+                            <strong>Règle 1 : Si $k > n$ (Plus de vecteurs que la dimension) :</strong><br>
+                            La famille est <strong>AUTOMATIQUEMENT LIÉE</strong>. Elle ne peut JAMAIS être libre, ni être une base ! (Ex : 4 vecteurs dans $\mathbb{R}^3$).
+                        </div>
+                        <div class="callout callout-trap">
+                            <strong>Règle 2 : Si $k < n$ (Moins de vecteurs que la dimension) :</strong><br>
+                            La famille <strong>NE PEUT JAMAIS ÊTRE GÉNÉRATRICE</strong> de $\mathbb{R}^n$. Elle ne peut jamais former une base ! (Ex : 2 vecteurs dans $\mathbb{R}^3$).
+                        </div>
+                        <div class="callout callout-exam">
+                            <strong>Règle 3 : Si $k = n$ (Exactement le bon nombre de vecteurs) :</strong><br>
+                            On a l'équivalence absolue :
+                            $$\mathbf{\text{Famille Libre} \iff \text{Famille Génératrice} \iff \text{BASE DE } \mathbb{R}^n}$$
+                            Il suffit de tester <strong>UN SEUL</strong> critère (ex: le déterminant $\det(M) \neq 0$) pour prouver les trois à la fois !
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 7 : APPLICATIONS LINÉAIRES -->
+            <section id="sec-app-lin" class="cheat-section">
+                <div class="section-header">
+                    <h2>⚙️ 7. Applications Linéaires & Matrices de Passage</h2>
+                    <p>Démonstration de linéarité en 2 étapes, endomorphismes, automorphismes, matrice associée et changement de base.</p>
+                </div>
+                <div class="cards-grid">
+                    <!-- Card 1 : Démonstration de Linéarité -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Comment Prouver qu'une Application est Linéaire</span>
+                            <span class="badge badge-method">Démonstration Obligatoire</span>
+                        </div>
+                        <p style="font-size:0.88rem;">Pour $f : \mathbb{R}^p \to \mathbb{R}^q$, il faut démontrer séparément les <strong>deux axiomes</strong> :</p>
+                        <div class="callout callout-exam">
+                            <strong>Axiome 1 : Additivité</strong><br>
+                            $$\forall \mathbf{u}, \mathbf{v} \in \mathbb{R}^p, \quad f(\mathbf{u} + \mathbf{v}) = f(\mathbf{u}) + f(\mathbf{v})$$
+                            Poser $\mathbf{u} = (x_1, y_1)$ et $\mathbf{v} = (x_2, y_2)$. Calculer le membre de gauche avec $\mathbf{u}+\mathbf{v} = (x_1+x_2, y_1+y_2)$, puis calculer la somme membre de droite, et conclure à l'égalité.
+                        </div>
+                        <div class="callout callout-exam">
+                            <strong>Axiome 2 : Homogénéité</strong><br>
+                            $$\forall \mathbf{u} \in \mathbb{R}^p, \; \forall \lambda \in \mathbb{R}, \quad f(\lambda \mathbf{u}) = \lambda f(\mathbf{u})$$
+                            Poser $\lambda \mathbf{u} = (\lambda x_1, \lambda y_1)$, appliquer $f$, factoriser $\lambda$ et conclure à l'égalité.
+                        </div>
+                        <div class="callout callout-tip">
+                            <strong>Test d'élimination express :</strong> Si $f(\mathbf{0}) \neq \mathbf{0}$, l'application n'est <strong>PAS linéaire</strong> (ex: présence d'une constante comme $+1$).
+                        </div>
+                    </div>
+
+                    <!-- Card 2 : Vocabulaire & Bijectivité -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Vocabulaire Fondamental & Théorème du Rang</span>
+                            <span class="badge badge-theorem">Vocabulaire</span>
+                        </div>
+                        <ul class="step-list">
+                            <li class="step-item"><span class="step-num">•</span><div class="step-content"><strong>Endomorphisme :</strong> Application linéaire dont l'espace de départ est identique à l'espace d'arrivée ($f : \mathbb{R}^n \to \mathbb{R}^n$).</div></li>
+                            <li class="step-item"><span class="step-num">•</span><div class="step-content"><strong>Isomorphisme :</strong> Application linéaire bijective.</div></li>
+                            <li class="step-item"><span class="step-num">•</span><div class="step-content"><strong>Automorphisme :</strong> Endomorphisme bijectif ($E \to E$ et inversible, soit $\det(M) \neq 0$).</div></li>
+                            <li class="step-item"><span class="step-num">•</span><div class="step-content"><strong>Noyau $\ker(f)$ :</strong> Ensemble des vecteurs dont l'image est le vecteur nul : $\ker(f) = \{\mathbf{u} \in E \mid f(\mathbf{u}) = \mathbf{0}\}$. $f$ est injective $\iff \ker(f) = \{\mathbf{0}\}$.</div></li>
+                            <li class="step-item"><span class="step-num">•</span><div class="step-content"><strong>Image $\operatorname{Im}(f)$ :</strong> Sous-espace engendré par les images de la base : $\operatorname{Im}(f) = \operatorname{Vect}(f(e_1), \dots, f(e_n))$.</div></li>
+                        </ul>
+                        <div class="formula-box">
+                            $$\mathbf{\dim(E) = \dim(\ker(f)) + \operatorname{rg}(f)} \quad \text{(Théorème du Rang)}$$
+                        </div>
+                    </div>
+
+                    <!-- Card 3 : Changement de Base -->
+                    <div class="cheat-card" style="grid-column: 1 / -1;">
+                        <div class="card-header">
+                            <span class="card-title">Matrice Relative à deux Bases & Matrice de Passage</span>
+                            <span class="badge badge-exam">Question Classique</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem;">
+                            <div>
+                                <h4 style="color:var(--primary); margin-bottom:0.4rem;">Matrice de passage $P$ (de $\mathcal{E}$ vers $\mathcal{B}$)</h4>
+                                <p style="font-size:0.88rem;">Les colonnes de $P$ sont les composantes des vecteurs de la <strong>nouvelle base $\mathcal{B}$</strong> exprimées dans l'<strong>ancienne base $\mathcal{E}$</strong> :</p>
+                                <div class="formula-box">
+                                    $$P = \begin{pmatrix} \mid & \mid \\ [v_1]_\mathcal{E} & [v_2]_\mathcal{E} \\ \mid & \mid \end{pmatrix}$$
+                                </div>
+                                <p style="font-size:0.85rem; margin-top:0.4rem;">Lien entre coordonnées de vecteurs : $[\mathbf{x}]_\mathcal{E} = P [\mathbf{x}]_\mathcal{B} \iff [\mathbf{x}]_\mathcal{B} = P^{-1} [\mathbf{x}]_\mathcal{E}$.</p>
+                            </div>
+                            <div>
+                                <h4 style="color:var(--secondary); margin-bottom:0.4rem;">Matrice $\operatorname{Mat}(f, \mathcal{E}, \mathcal{B})$</h4>
+                                <p style="font-size:0.88rem;">Matrice avec départ en base $\mathcal{E}$ et arrivée en base $\mathcal{B}$ :</p>
+                                <div class="formula-box">
+                                    $$\operatorname{Mat}(f, \mathcal{E}, \mathcal{B}) = P^{-1} \cdot \operatorname{Mat}(f, \mathcal{E}, \mathcal{E})$$
+                                </div>
+                                <p style="font-size:0.85rem; margin-top:0.4rem;"><strong>Méthode directe :</strong> Calculer $f(e_1)$ et $f(e_2)$, puis exprimer ces images comme combinaisons linéaires de la base d'arrivée : $f(e_j) = \alpha_j v_1 + \beta_j v_2$. Les coefficients $(\alpha_j, \beta_j)^t$ forment la $j$-ème colonne !</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 8 : DIAGONALISATION -->
+            <section id="sec-diag" class="cheat-section">
+                <div class="section-header">
+                    <h2>🔮 8. Diagonalisation, Valeurs Propres, Sous-Espaces Propres & Puissance $A^n$</h2>
+                    <p>Polynôme caractéristique, recherche des vecteurs propres, matrice diagonale $D$, matrice de passage $S$ et calcul de $A^n$.</p>
+                </div>
+                <div class="cards-grid">
+                    <!-- Card 1 : Valeurs propres et Polynôme -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Vérification de Vecteur Propre & Polynôme Caractéristique</span>
+                            <span class="badge badge-method">Étape 1 & 2</span>
+                        </div>
+                        <div class="callout callout-exam">
+                            <strong>Comment vérifier si un vecteur $v$ est vecteur propre de $A$ ?</strong><br>
+                            Calculer le produit matriciel $A \cdot v$. S'il existe un nombre réel $\lambda$ tel que :
+                            $$\mathbf{A \cdot v = \lambda \cdot v \quad (\text{avec } v \neq \mathbf{0})}$$
+                            Alors $v$ est bien un <strong>vecteur propre</strong> associé à la <strong>valeur propre $\lambda$</strong>.
+                        </div>
+                        <p style="font-size:0.88rem;"><strong>Polynôme caractéristique :</strong></p>
+                        <div class="formula-box">
+                            $$P_A(\lambda) = \det(A - \lambda I) = 0$$
+                        </div>
+                        <div class="callout callout-tip">
+                            <strong>⚡ Astuce Éclair pour Matrice $2 \times 2$ :</strong><br>
+                            $$\mathbf{P_A(\lambda) = \lambda^2 - \operatorname{tr}(A) \cdot \lambda + \det(A) = 0}$$
+                            Plus besoin de poser le déterminant complet ! Vous calculez la trace et le déterminant de tête, et le trinôme est posé en 5 secondes !
+                        </div>
+                    </div>
+
+                    <!-- Card 2 : Sous-Espaces Propres -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Recherche des Sous-Espaces Propres $E_\lambda$</span>
+                            <span class="badge badge-method">Étape 3</span>
+                        </div>
+                        <p style="font-size:0.88rem;">Pour chaque valeur propre $\lambda_i$, on résout le système linéaire homogène :</p>
+                        <div class="formula-box">
+                            $$(A - \lambda_i I) \cdot X = \mathbf{0} \iff \ker(A - \lambda_i I)$$
+                        </div>
+                        <ul class="step-list">
+                            <li class="step-item"><span class="step-num">1</span><div class="step-content">Soustraire $\lambda_i$ sur la diagonale principale de $A$.</div></li>
+                            <li class="step-item"><span class="step-num">2</span><div class="step-content">Réduire le système : les équations doivent être proportionnelles (au moins une ligne de zéros apparaît !).</div></li>
+                            <li class="step-item"><span class="step-num">3</span><div class="step-content">Exprimer une variable en fonction de l'autre (ex: $x = 2y$).</div></li>
+                            <li class="step-item"><span class="step-num">4</span><div class="step-content">Écrire l'espace : $E_{\lambda} = \left\{ y \begin{pmatrix} 2 \\ 1 \end{pmatrix} : y \in \mathbb{R} \right\}$. Une base est $u = \begin{pmatrix} 2 \\ 1 \end{pmatrix}$.</div></li>
+                        </ul>
+                    </div>
+
+                    <!-- Card 3 : Puissances A^n -->
+                    <div class="cheat-card" style="grid-column: 1 / -1;">
+                        <div class="card-header">
+                            <span class="card-title">Diagonalisation & Calcul de la Puissance $A^n$ et $A^{10}$</span>
+                            <span class="badge badge-theorem">Recette Universelle</span>
+                        </div>
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:1.2rem;">
+                            <div>
+                                <h4 style="color:var(--primary); margin-bottom:0.4rem;">Critère de Diagonalisation</h4>
+                                <p style="font-size:0.88rem;">Une matrice $n \times n$ est diagonalisable si et seulement si elle admet $n$ vecteurs propres linéairement indépendants.<br>
+                                <strong>Cas royal :</strong> Si une matrice $n \times n$ admet $n$ valeurs propres distinctes ($\lambda_1 \neq \lambda_2 \neq \dots$), elle est <strong>automatiquement diagonalisable</strong> !</p>
+                                <div class="formula-box" style="margin-top:0.5rem;">
+                                    $$A = S D S^{-1} \iff D = S^{-1} A S$$
+                                    $$S = [v_1 \mid v_2 \mid \dots \mid v_n], \quad D = \begin{pmatrix} \lambda_1 & 0 \\ 0 & \lambda_2 \end{pmatrix}$$
+                                </div>
+                            </div>
+                            <div>
+                                <h4 style="color:var(--secondary); margin-bottom:0.4rem;">Calcul de $A^n$</h4>
+                                <div class="formula-box">
+                                    $$\mathbf{A^n = S \cdot D^n \cdot S^{-1} = S \begin{pmatrix} \lambda_1^n & 0 \\ 0 & \lambda_2^n \end{pmatrix} S^{-1}}$$
+                                </div>
+                                <ul class="step-list" style="margin-top:0.4rem;">
+                                    <li class="step-item"><span class="step-num">1</span><div class="step-content">Calculer $S^{-1}$ par la formule du déterminant et de l'adjointe.</div></li>
+                                    <li class="step-item"><span class="step-num">2</span><div class="step-content">Effectuer le produit $S \cdot D^n$, puis multiplier à droite par $S^{-1}$.</div></li>
+                                    <li class="step-item"><span class="step-num">3</span><div class="step-content">Pour $A^{10}$, remplacer simplement $n$ par $10$ dans l'expression littérale finale.</div></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 9 : MODÈLES DE RÉDACTION -->
+            <section id="sec-redaction" class="cheat-section">
+                <div class="section-header">
+                    <h2>✍️ 9. Modèles de Rédaction Officiels & Phrases Clés pour l'Examen</h2>
+                    <p>Les formulations textuelles exigées mot pour mot par les correcteurs de l'ICHEC pour obtenir 100% des points.</p>
+                </div>
+                <div class="cards-grid">
+                    <!-- Redaction 1 : Famille Libre / Base -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Justifier une Famille Libre et une Base de $\mathbb{R}^3$</span>
+                            <span class="badge badge-exam">Modèle Rédaction</span>
+                        </div>
+                        <div class="redaction-quote">
+                            « Soit $\lambda_1, \lambda_2, \lambda_3 \in \mathbb{R}$ tels que $\lambda_1 u + \lambda_2 v + \lambda_3 w = \mathbf{0}$. Ceci équivaut au système linéaire homogène : [détailler le système]. Par échelonnement de Gauss, l'unique solution est la solution nulle $\lambda_1 = \lambda_2 = \lambda_3 = 0$. Par conséquent, la famille $\mathcal{F}$ est <strong>libre</strong>.<br>
+                            De plus, le cardinal de $\mathcal{F}$ est égal à la dimension de l'espace ($\operatorname{Card}(\mathcal{F}) = 3 = \dim(\mathbb{R}^3)$). Dans un espace vectoriel de dimension $n$, toute famille libre de $n$ vecteurs est automatiquement une famille génératrice. Étant à la fois libre et génératrice, $\mathcal{F}$ forme une <strong>base de $\mathbb{R}^3$</strong>. »
+                        </div>
+                    </div>
+
+                    <!-- Redaction 2 : Automorphisme -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Justifier un Automorphisme</span>
+                            <span class="badge badge-exam">Modèle Rédaction</span>
+                        </div>
+                        <div class="redaction-quote">
+                            « Tout d'abord, $f$ est une application linéaire de $\mathbb{R}^2$ dans $\mathbb{R}^2$. L'espace de départ étant égal à l'espace d'arrivée, $f$ est un <strong>endomorphisme</strong>.<br>
+                            Considérons la matrice associée à $f$ dans la base canonique : $M = \operatorname{Mat}(f, \mathcal{E}, \mathcal{E})$. Son déterminant est $\det(M) = -7 \neq 0$. Puisque son déterminant est non nul, la matrice $M$ est inversible, ce qui prouve que l'endomorphisme $f$ est bijectif. Un endomorphisme bijectif étant par définition un <strong>automorphisme</strong>, la conclusion est démontrée. »
+                        </div>
+                    </div>
+
+                    <!-- Redaction 3 : Diagonalisabilité -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Justifier la Diagonalisabilité</span>
+                            <span class="badge badge-exam">Modèle Rédaction</span>
+                        </div>
+                        <div class="redaction-quote">
+                            « La matrice $A$ est une matrice carrée d'ordre $2$. Le polynôme caractéristique $P_A(\lambda) = \lambda^2 - 7\lambda + 10 = (\lambda - 2)(\lambda - 5)$ admet deux racines réelles distinctes : $\lambda_1 = 2$ et $\lambda_2 = 5$. Une matrice carrée d'ordre $n$ admettant $n$ valeurs propres réelles distinctes est toujours diagonalisable. Par conséquent, $A$ est <strong>diagonalisable</strong> sous la forme $A = S D S^{-1}$. »
+                        </div>
+                    </div>
+
+                    <!-- Redaction 4 : Déterminant sans calcul -->
+                    <div class="cheat-card">
+                        <div class="card-header">
+                            <span class="card-title">Déterminant déduit sans calcul de développement</span>
+                            <span class="badge badge-exam">Modèle Rédaction</span>
+                        </div>
+                        <div class="redaction-quote">
+                            « On constate que la matrice $K$ est obtenue à partir de la matrice $M$ en échangeant la première ligne et la deuxième ligne ($L_1 \leftrightarrow L_2$). D'après les propriétés fondamentales des déterminants, l'échange de deux lignes (ou de deux colonnes) d'une matrice change le signe de son déterminant sans modifier sa valeur absolue. Dès lors : $\det(K) = -\det(M) = -10$. »
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 10 : CALCULATEUR EXPRESS -->
+            <section id="sec-outils" class="cheat-section">
+                <div class="section-header">
+                    <h2>🧮 Simulateur & Vérificateur Express d'Algèbre</h2>
+                    <p>Vérifiez instantanément vos calculs d'exercices : Déterminant, Trace, Inverse, Polynôme caractéristique et Valeurs propres pour une matrice $2 \times 2$.</p>
+                </div>
+                <div class="interactive-widget">
+                    <h3>Simulateur Matrice $2 \times 2$ : $A = \begin{pmatrix} a & b \\ c & d \end{pmatrix}$</h3>
+                    <div style="display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap; margin-top:0.8rem;">
+                        <div class="matrix-input-grid" style="grid-template-columns: repeat(2, 48px);">
+                            <input type="number" id="m_a" value="4">
+                            <input type="number" id="m_b" value="2">
+                            <input type="number" id="m_c" value="1">
+                            <input type="number" id="m_d" value="3">
+                        </div>
+                        <button class="btn-calc" onclick="calculateMatrix2x2()">⚡ Calculer les Propriétés</button>
+                    </div>
+                    <div id="matrix-output" class="calc-result" style="display:none;"></div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- JavaScript for Live Search, Theme Toggle, and Calculator -->
+    <script>
+        // Live Search Filter
+        document.getElementById('liveSearch').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.cheat-card');
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Theme Toggle (Dark / Light)
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            const btn = document.getElementById('themeToggle');
+            btn.innerHTML = newTheme === 'dark' ? '☀️ Mode Clair' : '🌓 Mode Sombre';
+            localStorage.setItem('algebre_theme', newTheme);
+        }
+
+        // Restore theme
+        (function() {
+            const savedTheme = localStorage.getItem('algebre_theme');
+            if (savedTheme) {
+                document.body.setAttribute('data-theme', savedTheme);
+                if (savedTheme === 'dark') {
+                    document.getElementById('themeToggle').innerHTML = '☀️ Mode Clair';
+                }
+            }
+        })();
+
+        // Interactive Matrix 2x2 Calculator
+        function calculateMatrix2x2() {
+            const a = parseFloat(document.getElementById('m_a').value);
+            const b = parseFloat(document.getElementById('m_b').value);
+            const c = parseFloat(document.getElementById('m_c').value);
+            const d = parseFloat(document.getElementById('m_d').value);
+
+            if (isNaN(a) || isNaN(b) || isNaN(c) || isNaN(d)) {
+                alert('Veuillez entrer 4 nombres valides.');
+                return;
+            }
+
+            const det = a * d - b * c;
+            const tr = a + d;
+            const delta = tr * tr - 4 * det;
+
+            let eigText = "";
+            if (delta > 0) {
+                const l1 = ((tr + Math.sqrt(delta)) / 2).toFixed(3);
+                const l2 = ((tr - Math.sqrt(delta)) / 2).toFixed(3);
+                eigText = `<strong>Deux valeurs propres réelles distinctes :</strong> $\\lambda_1 = ${l1}$ et $\\lambda_2 = ${l2}$ (Matrice diagonalisable d'office !)`;
+            } else if (delta === 0) {
+                const l = (tr / 2).toFixed(3);
+                eigText = `<strong>Une valeur propre réelle double :</strong> $\\lambda_0 = ${l}$`;
+            } else {
+                eigText = `<strong>Pas de valeurs propres réelles</strong> (Discriminant $\\Delta < 0$).`;
+            }
+
+            let invText = "";
+            if (det !== 0) {
+                invText = `<strong>Matrice Inverse $A^{-1}$ :</strong> $\\frac{1}{${det}} \\begin{pmatrix} ${d} & ${-b} \\\\ ${-c} & ${a} \\end{pmatrix}$`;
+            } else {
+                invText = `<strong style="color:var(--danger);">Matrice non inversible</strong> car $\\det(A) = 0$.`;
+            }
+
+            const output = document.getElementById('matrix-output');
+            output.style.display = 'block';
+            output.innerHTML = `
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:0.8rem;">
+                    <div><strong>Déterminant $\\det(A)$ :</strong> ${det}</div>
+                    <div><strong>Trace $\\operatorname{tr}(A)$ :</strong> ${tr}</div>
+                    <div style="grid-column: 1 / -1;"><strong>Polynôme Caractéristique :</strong> $P_A(\\lambda) = \\lambda^2 - (${tr})\\lambda + (${det})$</div>
+                    <div style="grid-column: 1 / -1;">${eigText}</div>
+                    <div style="grid-column: 1 / -1;">${invText}</div>
+                </div>
+            `;
+
+            if (window.MathJax) {
+                MathJax.typesetPromise([output]);
+            }
+        }
+    </script>
+</body>
+</html>
